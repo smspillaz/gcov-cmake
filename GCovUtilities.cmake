@@ -46,18 +46,9 @@ endif (FORCE_DEBUG_SYMBOLS_AND_NOOPT)
 
 if (ENABLE_COVERAGE)
 
-    set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -ftest-coverage")
-    set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -ftest-coverage")
+    set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -ftest-coverage -fprofile-arcs")
+    set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -ftest-coverage -fprofile-arcs")
 
-    message (STATUS "Code coverage reporting enabled")
+    message (STATUS "Code coverage and profiling counters enabled")
 
 endif (ENABLE_COVERAGE)
-
-if (ENABLE_PROFILING)
-
-    set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fprofile-arcs")
-    set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fprofile-arcs")
-
-    message (STATUS "Code profiling counters enabled")
-
-endif (ENABLE_PROFILING)
