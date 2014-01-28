@@ -23,6 +23,7 @@ if (NOT CMAKE_COMPILER_IS_GNUCXX OR NOT CMAKE_COMPILER_IS_GNUCC)
 
     message (STATUS "Compiler is not gcc or g++, coverage reports will not be "
                     "enabled")
+    return ()
 
 endif (NOT CMAKE_COMPILER_IS_GNUCXX OR NOT CMAKE_COMPILER_IS_GNUCC)
 
