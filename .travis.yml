@@ -1,0 +1,43 @@
+language: cpp
+sudo: false
+cache:
+  directories:
+  - container
+env:
+  matrix:
+  - CMAKE_GENERATOR="Unix Makefiles" CMAKE_VERSION="latest" DEPLOY="1"
+  - CMAKE_GENERATOR="Ninja" CMAKE_VERSION="latest"
+  - CMAKE_GENERATOR="Unix Makefiles" CMAKE_VERSION="3.0"
+  - CMAKE_GENERATOR="Ninja" CMAKE_VERSION="3.0"
+  - CMAKE_GENERATOR="Unix Makefiles" CMAKE_VERSION="latest" COVERAGE="--use-cmake-coverage"
+  global:
+  - secure: XpCcImo3opz3M5dyaEmVk1UbWK6TC8m05PiqbN093ZzdupUi+cw0Xvi7l+5goyO5KQaXSRYD1Y+kAl8n21OdHLOLRhIxmWiJV8WJlPgrqIzz86t18vkbUFM6jCFbfHAaMAL/lnDIL638z+KNYLJHAFLLPHYZmXnoXO/zDhNt/CI=
+  - secure: CgEkEnFe4OQ0iZ95+fnUuVrH5LkRKRjPca2r2Zx9/hw02X2r0qTqgI0o9ubinTeoayTYaSo/jZluYFXZHY9L7m7UmXHc0JRW3lrU9BAwpoyxSQ1dW+dBZQwrbEjefRZ0gmPz1BIlLLt9Jgg8tDp2E7IUN63AxfJIrY0XUKq6dnk=
+  - secure: Qv2BFqYZ20LxAcjcFIONDklPgCd+3/ueO793qVt3yO1GvA0F1n62Qbo17HFnmFGDtdleRWBthQp/gM9lx8L6jiq8tO4VXORWPNvgmvQh2rM8/kba8v+jlOmB+5wzyrE/9LhTsXc4OkwiM10bX4H4l0L45o2Jf1/kdVKzN+bFWJI=
+addons:
+  apt:
+    sources:
+    - deadsnakes
+    packages:
+    - python3.4-dev
+install:
+- eval $(curl -LSs --retry 100 --connect-timeout 3 public-travis-scripts.polysquare.org/bootstrap.py
+  | python /dev/stdin -d container -s setup/conan/setup.py -e bash -p /dev/stdout
+  --cmake-version ${CMAKE_VERSION})
+script:
+- polysquare_run check/conan/check.py ${COVERAGE} --cmake-namespace cmake --generator
+  "${CMAKE_GENERATOR}"
+before_cache:
+- polysquare_cleanup
+after_success:
+- polysquare_run coverage/cmake/coverage.py
+before_deploy:
+- polysquare_run deploy/conan/before_deploy.py --package="gcov-cmake"
+deploy:
+  provider: script
+  skip_cleanup: true
+  script: "./travis-deploy"
+  on:
+    repo: polysquare/gcov-cmake
+    branch: master
+    condition: "${DEPLOY} = 1"

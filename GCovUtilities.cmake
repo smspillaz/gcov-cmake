@@ -1,10 +1,10 @@
+# /GCovUtilities.cmake
 #
-# GCovUtilities.cmake
+# Utility options enable test coverage and profiling information.
 #
-# Utility functions enable test coverage and profiling
-# information, as well as a mechanism
-#
-# See LICENCE.md for Copyright information.
+# See /LICENCE.md for Copyright information
+include ("cmake/cmake-include-guard/IncludeGuard")
+cmake_include_guard (SET_MODULE_PATH)
 
 find_program (GCOV_EXECUTABLE gcov)
 
@@ -12,12 +12,12 @@ if (GCOV_EXECUTABLE)
 
     mark_as_advanced (GCOV_EXECUTABLE)
 
-else (GCOV_EXECUTABLE)
+else ()
 
     message (STATUS "GCov was not found, coverage reports will not be enabled")
     return ()
 
-endif (GCOV_EXECUTABLE)
+endif ()
 
 if (NOT CMAKE_COMPILER_IS_GNUCXX OR NOT CMAKE_COMPILER_IS_GNUCC)
 
@@ -25,7 +25,7 @@ if (NOT CMAKE_COMPILER_IS_GNUCXX OR NOT CMAKE_COMPILER_IS_GNUCC)
                     "enabled")
     return ()
 
-endif (NOT CMAKE_COMPILER_IS_GNUCXX OR NOT CMAKE_COMPILER_IS_GNUCC)
+endif ()
 
 option (ENABLE_COVERAGE "Enable code coverage data generation" OFF)
 option (ENABLE_PROFILING "Enable code profiling data generation" OFF)
@@ -36,14 +36,14 @@ if (ENABLE_COVERAGE OR ENABLE_PROFILING)
 
     set (FORCE_DEBUG_SYMBOLS_AND_NOOPT ON)
 
-endif (ENABLE_COVERAGE OR ENABLE_PROFILING)
+endif ()
 
 if (FORCE_DEBUG_SYMBOLS_AND_NOOPT)
 
     set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -O0")
     set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g -O0")
 
-endif (FORCE_DEBUG_SYMBOLS_AND_NOOPT)
+endif ()
 
 if (ENABLE_COVERAGE)
 
@@ -52,4 +52,4 @@ if (ENABLE_COVERAGE)
 
     message (STATUS "Code coverage and profiling counters enabled")
 
-endif (ENABLE_COVERAGE)
+endif ()
