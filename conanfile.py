@@ -8,7 +8,8 @@ VERSION = "0.0.2"
 class GCovCMake(ConanFile):
     name = "gcov-cmake"
     version = os.environ.get("CONAN_VERSION_OVERRIDE", VERSION)
-    requires = ("cmake-include-guard/master@smspillaz/cmake-include-guard", )
+    requires = ("cmake-include-guard/master@smspillaz/cmake-include-guard",
+                "cmake-unit/master@smspillaz/cmake-unit")
     generators = "cmake"
     url = "http://github.com/polysquare/gcov-cmake"
     licence = "MIT"

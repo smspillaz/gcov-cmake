@@ -12,44 +12,46 @@ if (GCOV_EXECUTABLE)
 
     mark_as_advanced (GCOV_EXECUTABLE)
 
-else ()
-
-    message (STATUS "GCov was not found, coverage reports will not be enabled")
-    return ()
-
-endif ()
-
-if (NOT CMAKE_COMPILER_IS_GNUCXX OR NOT CMAKE_COMPILER_IS_GNUCC)
-
-    message (STATUS "Compiler is not gcc or g++, coverage reports will not be "
-                    "enabled")
-    return ()
-
 endif ()
 
 option (ENABLE_COVERAGE "Enable code coverage data generation" OFF)
 option (ENABLE_PROFILING "Enable code profiling data generation" OFF)
 
-set (FORCE_DEBUG_SYMBOLS_AND_NOOPT OFF)
+# gcov_get_compile_flags
+#
+# Get the compiler flags to enable C++ code coverage reports
+#
+# RETURN_COMPILE_FLAGS: A variable to store the compile flags in
+function (gcov_get_compile_flags RETURN_COMPILE_FLAGS)
 
-if (ENABLE_COVERAGE OR ENABLE_PROFILING)
+    if (NOT CMAKE_COMPILER_IS_GNUCXX OR NOT CMAKE_COMPILER_IS_GNUCC)
 
-    set (FORCE_DEBUG_SYMBOLS_AND_NOOPT ON)
+        message (STATUS "Compiler is not gcc or g++, coverage "
+                        "reports will not be enabled")
+        return ()
 
-endif ()
+    endif ()
 
-if (FORCE_DEBUG_SYMBOLS_AND_NOOPT)
+    if (NOT GCOV_EXECUTABLE)
 
-    set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -O0")
-    set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g -O0")
+        message (STATUS "GCov was not found, coverage reports "
+                        "will not be enabled")
+        return ()
 
-endif ()
+    endif ()
 
-if (ENABLE_COVERAGE)
+    if (ENABLE_COVERAGE OR ENABLE_PROFILING)
 
-    set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -ftest-coverage -fprofile-arcs")
-    set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -ftest-coverage -fprofile-arcs")
+        set (COMPILE_FLAGS "-g -O0")
 
-    message (STATUS "Code coverage and profiling counters enabled")
+    endif ()
 
-endif ()
+    if (ENABLE_COVERAGE)
+
+        set (COMPILE_FLAGS "${COMPILE_FLAGS} -ftest-coverage -fprofile-arcs")
+
+    endif ()
+
+    set (${RETURN_COMPILE_FLAGS} "${COMPILE_FLAGS}" PARENT_SCOPE)
+
+endfunction ()
