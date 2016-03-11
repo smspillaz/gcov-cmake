@@ -25,7 +25,7 @@ install:
 build: false
 
 test_script:
- - ps: polysquare_run check/conan/check.py --no-mdl --generator "$env:CMAKE_GENERATOR" --namespace "psq"
+ - ps: polysquare_run check/conan/check.py --no-mdl --generator "$env:CMAKE_GENERATOR" --namespace "gcov"
 
 after_test:
  - ps: polysquare_cleanup
