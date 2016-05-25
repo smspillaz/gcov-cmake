@@ -11,7 +11,7 @@ set (CMAKE_MODULE_PATH
 
 cmake_minimum_required (VERSION 2.8)
 
-include ("cmake/cmake-module-common/Common")
+include ("cmake/cmake-module-common/Common" OPTIONAL)
 include (GCovUtilities)
 
 function (gcov_test_no_test_coverage_if_cmake_compiler_not_gnucxx)
@@ -119,6 +119,10 @@ set (MARKDOWN_FILES
      "${CMAKE_CURRENT_LIST_DIR}/LICENCE.md"
      "${CMAKE_CURRENT_LIST_DIR}/README.md")
 
-cmake_module_add_common_targets (NAMESPACE "gcov"
-                                 CMAKE_FILES ${CMAKE_FILES}
-                                 DOCUMENTATION_FILES ${MARKDOWN_FILES})
+if (COMMAND cmake_module_add_common_targets)
+
+    cmake_module_add_common_targets (NAMESPACE "gcov"
+                                     CMAKE_FILES ${CMAKE_FILES}
+                                     DOCUMENTATION_FILES ${MARKDOWN_FILES})
+
+endif ()
