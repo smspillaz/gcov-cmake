@@ -22,10 +22,12 @@ function (gcov_test_no_test_coverage_if_cmake_compiler_not_gnucxx)
         unset (CMAKE_COMPILER_IS_GNUCXX)  # NOLINT:unused/var_in_func
         unset (CMAKE_COMPILER_IS_GNUCC)  # NOLINT:unused/var_in_func
 
-        gcov_get_compile_flags (FLAGS)
+        gcov_get_compile_flags (COMPILE_FLAGS LINK_FLAGS)
 
-        cmake_unit_assert_that (FLAGS not variable_is STRING EQUAL
+        cmake_unit_assert_that (COMPILE_FLAGS not variable_is STRING EQUAL
                                 "-g -O0 -ftest-coverage -fprofile-arcs")
+        cmake_unit_assert_that (LINK_FLAGS not variable_is STRING EQUAL
+                                "-fprofile-arcs -lgcov")
 
     endfunction ()
 
@@ -42,10 +44,12 @@ function (gcov_test_no_test_coverage_enable_coverage_not_set)
 
         set (ENABLE_COVERAGE OFF CACHE BOOL "" FORCE)
 
-        gcov_get_compile_flags (FLAGS)
+        gcov_get_compile_flags (COMPILE_FLAGS LINK_FLAGS)
 
-        cmake_unit_assert_that (FLAGS not compare_as STRING EQUAL
+        cmake_unit_assert_that (COMPILE_FLAGS not compare_as STRING EQUAL
                                 "-g -O0 -ftest-coverage -fprofile-arcs")
+        cmake_unit_assert_that (LINK_FLAGS not compare_as STRING EQUAL
+                                "-fprofile-arcs -lgcov")
 
     endfunction ()
 
@@ -62,10 +66,12 @@ function (gcov_test_no_test_coverage_enable_coverage_not_set)
 
         set (ENABLE_COVERAGE OFF CACHE BOOL "" FORCE)
 
-        gcov_get_compile_flags (FLAGS)
+        gcov_get_compile_flags (COMPILE_FLAGS LINK_FLAGS)
 
-        cmake_unit_assert_that (FLAGS not compare_as STRING EQUAL
+        cmake_unit_assert_that (COMPILE_FLAGS not compare_as STRING EQUAL
                                 "-g -O0 -ftest-coverage -fprofile-arcs")
+        cmake_unit_assert_that (LINK_FLAGS not compare_as STRING EQUAL
+                                "-fprofile-arcs -lgcov")
 
     endfunction ()
 
@@ -82,10 +88,12 @@ function (gcov_test_enable_coverage_if_set)
 
         set (ENABLE_COVERAGE ON CACHE BOOL "" FORCE)
 
-        gcov_get_compile_flags (FLAGS)
+        gcov_get_compile_flags (COMPILE_FLAGS LINK_FLAGS)
 
-        cmake_unit_assert_that (FLAGS compare_as STRING EQUAL
+        cmake_unit_assert_that (COMPILE_FLAGS compare_as STRING EQUAL
                                 "-g -O0 -ftest-coverage -fprofile-arcs")
+        cmake_unit_assert_that (LINK_FLAGS compare_as STRING EQUAL
+                                "-fprofile-arcs -lgcov")
 
     endfunction ()
 
@@ -102,10 +110,12 @@ function (gcov_test_enable_debug_if_profiling_set)
 
         set (ENABLE_PROFILING ON CACHE BOOL "" FORCE)
 
-        gcov_get_compile_flags (FLAGS)
+        gcov_get_compile_flags (COMPILE_FLAGS LINK_FLAGS)
 
-        cmake_unit_assert_that (FLAGS compare_as STRING EQUAL
+        cmake_unit_assert_that (COMPILE_FLAGS compare_as STRING EQUAL
                                 "-g -O0")
+        cmake_unit_assert_that (LINK_FLAGS not compare_as STRING EQUAL
+                                "-fprofile-arcs -lgcov")
 
     endfunction ()
 

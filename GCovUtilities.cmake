@@ -22,7 +22,9 @@ option (ENABLE_PROFILING "Enable code profiling data generation" OFF)
 # Get the compiler flags to enable C++ code coverage reports
 #
 # RETURN_COMPILE_FLAGS: A variable to store the compile flags in
-function (gcov_get_compile_flags RETURN_COMPILE_FLAGS)
+# RETURN_LINK_FLAGS: A variable to store linker flags in
+function (gcov_get_compile_flags RETURN_COMPILE_FLAGS
+                                 RETURN_LINK_FLAGS)
 
     if (NOT CMAKE_COMPILER_IS_GNUCXX OR NOT CMAKE_COMPILER_IS_GNUCC)
 
@@ -49,9 +51,11 @@ function (gcov_get_compile_flags RETURN_COMPILE_FLAGS)
     if (ENABLE_COVERAGE)
 
         set (COMPILE_FLAGS "${COMPILE_FLAGS} -ftest-coverage -fprofile-arcs")
+        set (LINK_FLAGS "-fprofile-arcs -lgcov")
 
     endif ()
 
     set (${RETURN_COMPILE_FLAGS} "${COMPILE_FLAGS}" PARENT_SCOPE)
+    set (${RETURN_LINK_FLAGS} "${LINK_FLAGS}" PARENT_SCOPE)
 
 endfunction ()
